@@ -127,6 +127,20 @@ class Filter(db.Model, SerializerMixin):
    #Serializations
    serialize_rules=('-user.filters', )
 
+class Visit(db.Model, SerializerMixin):
+   __tablename__ = 'visits'
+
+   id = db.Column(db.Integer, primary_key=True)
+   user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+   restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'))
+   comment = db.Column(db.String, nullable=True)
+
+class Random_Restaurant(db.Model, SerializerMixin):
+   __tablename__ = 'random_restaurants'
+
+   id = db.Column(db.Integer, primary_key=True)
+   cuisine = db.Column(db.String, nullable=True)
+
 
    def __repr__(self):
        return f'<Filter {self.id}, {self.user_id}, {self.cuisine}, {self.neighborhood}, {self.visited}>'

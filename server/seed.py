@@ -16,7 +16,7 @@ def create_username():
 
     user1 = User(
         username = 'statsumi97',
-        user_email = 'statsumi.sts@gmail.com',
+        email = 'statsumi.sts@gmail.com',
         passwordhash = 'testing11216'
     )
     usernames.append(user1)
@@ -47,6 +47,13 @@ def create_restaurants():
             usernames = create_username()
             db.session.add_all(usernames)
             db.session.commit()
+
+            print('Seeding restaurants...')
+            restaurants = create_restaurants()
+            db.session.add_all(restaurants)
+            db.session.commit()
+
+            print('Done seeding!')
 
             
 

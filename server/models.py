@@ -140,6 +140,8 @@ class Random_Restaurant(db.Model, SerializerMixin):
 
    id = db.Column(db.Integer, primary_key=True)
    cuisine = db.Column(db.String, nullable=True)
+   neighborhood = db.Column(db.String, nullable=True)
+   visited = db.Column(db.Boolean, nullable=True)
 
 
    def __repr__(self):

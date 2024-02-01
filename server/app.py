@@ -9,6 +9,7 @@ from flask_cors import cross_origin
 from sqlalchemy.sql.expression import func, random
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
+from werkzeug.security import check_password_hash
 
 # Local imports
 from config import app, db, api
@@ -49,7 +50,7 @@ def login():
         password = form_data['password']
         user = User.query.filter(User.user_email == email).first()
 
-        if user and user.check_password(password):
+        if user and check_password_hash(user.password, password):
             login_user(user) #use Flask-Login to log in the user
             login_body = user.to_dict(only=('id', ))
             res = make_response(login_body, 200)

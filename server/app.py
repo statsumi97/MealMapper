@@ -8,6 +8,7 @@ from flask_restful import Resource
 from flask_cors import cross_origin
 from sqlalchemy.sql.expression import func, random
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 
 # Local imports
 from config import app, db, api
@@ -16,6 +17,7 @@ from models import db, User, Restaurant, Memory, Filter, Visit
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'afraid-of-heights'
+login_manager = LoginManager(app)
 
 #This function generates a token
 def generate_token(user_id):
@@ -41,41 +43,46 @@ def index():
 ## Login Functionality
 @app.route('/login', methods = ['POST'])
 def login():
-    #Authenticate user (omitted)
-    user_id = 1
-    token = generate_token(user_id)
-    return jsonify({'token': token}), 200
-
-def users_by_email():
     try:
         form_data = request.get_json()
         email = form_data['email']
         password = form_data['password']
         user = User.query.filter(User.user_email == email).first()
 
-        if user:
-            if password == user.passwordhash:
-                login_body = user.to_dict(only=('id',))
-                res = make_response(
-                    login_body,
-                    200
-                )
-            else:
-                res = make_response(
-                    {'error': 'wrong password'},
-                    401
-                )
+        if user and user.check_password(password):
+            login_user(user) #use Flask-Login to log in the user
+            login_body = user.to_dict(only=('id', ))
+            res = make_response(login_body, 200)
         else:
             res = make_response(
-                {'error': 'account does not exist'},
-                404
+                {'error': 'Invalid credentials'},
+                401
             )
-    except:
+    except Exception as e:
+        print(str(e))
         res = make_response(
-            {'error': 'account does not exist'},
-            404
+            {'error': 'Invalid credentials'},
+            401
         )
     return res
+
+#User loading function to load a user from the user ID stored in the session
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+#Use @login_required decorator to protect routes that require authentication
+@app.route('/protected')
+@login_required
+def protected_route():
+    return f'Hello, {current_user.username}! This route requires authentication.'
+
+#Implement a logout route to log out the user
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return jsonify({'message': 'Logged out successfully'}), 200
 
 @app.route('/users/<int:id>', methods = ['GET', 'DELETE'])
 def users_by_id(id):

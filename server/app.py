@@ -128,6 +128,26 @@ def users():
         )
     return response
 
+
+#Improve error handling by catching specific exceptions and return more accurate error messages
+@app.route('/users/<string:email>', methods = ['GET'])
+def users_by_email(email):
+    try:
+        user = User.query.filter(User.user_email == email).first()
+
+        if user:
+            user_body = user.to_dict(rules=('-memories', '-filters', '-username', '-id'))
+            res = make_response(user_body, 200)
+        else:
+            res = make_response({'error': 'User not found'}, 404)
+    except ValueError:
+        res = make_response({'error': 'Invalid value provided'}, 400)
+    except Exception as e:
+        print(str(e))
+        res = make_response({'error': 'An unexpected error occured'}, 500)
+    
+    return res
+
 @app.route('/restaurants/<int:id>', methods = ['GET'])
 def restaurant_by_id(id):
     restaurant = Restaurant.query.filter(Restaurant.id == id).first()

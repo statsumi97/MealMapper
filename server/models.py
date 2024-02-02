@@ -2,6 +2,7 @@ from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import validates
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.exc import IntegrityError
 import re
 
 
@@ -13,9 +14,9 @@ class User(db.Model, SerializerMixin):
 
 
    id = db.Column(db.Integer, primary_key=True)
-   username = db.Column(db.String, nullable=False)
+   username = db.Column(db.String, nullable=False, unique=True)
    password = db.Column(db.String, nullable=False)
-   email = db.Column(db.String, nullable=False)
+   email = db.Column(db.String, nullable=False, unique=True)
 
 
    #Relationships
@@ -99,6 +100,7 @@ class Memory(db.Model, SerializerMixin):
    date_visited = db.Column(db.Date, nullable=False)
    photo = db.Column(db.String, nullable=True)
    story = db.Column(db.String, nullable=True)
+   title = db.Column(db.String, nullable=True)
 
 
    #Relationships

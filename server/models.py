@@ -22,6 +22,7 @@ class User(db.Model, SerializerMixin):
    memories = db.relationship('Memory', back_populates='user')
    filters = db.relationship('Filter', back_populates='user')
    visits = db.relationship('Visit', back_populates='user')
+   random_restaurants = db.relationship('Random_Restaurant', back_populates='user')
 
 
    #Serialization
@@ -77,6 +78,7 @@ class Restaurant(db.Model, SerializerMixin):
    #Relationships
    memories = db.relationship('Memory', back_populates='restaurant')
    visits = db.relationship('Visit', back_populates='restaurant')
+   random_restaurants = db.relationship('Random_Restaurant', back_populates='restaurant')
 
 
    #Serialization
@@ -145,9 +147,15 @@ class Random_Restaurant(db.Model, SerializerMixin):
    __tablename__ = 'random_restaurants'
 
    id = db.Column(db.Integer, primary_key=True)
+   user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+   restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'))
    cuisine = db.Column(db.String, nullable=True)
    neighborhood = db.Column(db.String, nullable=True)
    visited = db.Column(db.Boolean, nullable=True)
+
+   #Relationships
+   user = db.relationship('User', back_populates='random_restaurants')
+   restaurant = db.relationship('Restaurant', back_populates='random_restaurants')
 
 
    def __repr__(self):

@@ -18,6 +18,9 @@ class User(db.Model, SerializerMixin):
    password = db.Column(db.String, nullable=False)
    email = db.Column(db.String, nullable=False, unique=True)
    profile_picture = db.Column(db.String, nullable=True)
+   cuisine = db.Column(db.String, nullable=True)
+   neighborhood = db.Column(db.String, nullable=True)
+   visited = db.Column(db.Boolean, nullable=True)
 
 
    #Relationships
@@ -166,9 +169,6 @@ class Random_Restaurant(db.Model, SerializerMixin):
    id = db.Column(db.Integer, primary_key=True)
    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'))
-   cuisine = db.Column(db.String, nullable=True)
-   neighborhood = db.Column(db.String, nullable=True)
-   visited = db.Column(db.Boolean, nullable=True)
 
    #Relationships
    user = db.relationship('User', back_populates='random_restaurants')
@@ -176,4 +176,4 @@ class Random_Restaurant(db.Model, SerializerMixin):
 
 
    def __repr__(self):
-       return f'<Random_Restaurant {self.id}, {self.cuisine}, {self.neighborhood}, {self.visited}>'
+       return f'<Random_Restaurant {self.id}>'

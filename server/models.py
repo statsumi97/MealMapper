@@ -21,6 +21,7 @@ class User(db.Model, SerializerMixin):
    #Relationships
    memories = db.relationship('Memory', back_populates='user')
    filters = db.relationship('Filter', back_populates='user')
+   visits = db.relationship('Visit', back_populates='user')
 
 
    #Serialization
@@ -75,6 +76,7 @@ class Restaurant(db.Model, SerializerMixin):
 
    #Relationships
    memories = db.relationship('Memory', back_populates='restaurant')
+   visits = db.relationship('Visit', back_populates='restaurant')
 
 
    #Serialization
@@ -134,6 +136,10 @@ class Visit(db.Model, SerializerMixin):
    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'))
    comment = db.Column(db.String, nullable=True)
+
+   #Relationships
+   user = db.relationship('User', back_populates='visits')
+   restaurant = db.relationship('Restaurant', back_populates='visits')
 
 class Random_Restaurant(db.Model, SerializerMixin):
    __tablename__ = 'random_restaurants'

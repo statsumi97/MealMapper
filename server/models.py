@@ -151,4 +151,4 @@ class Random_Restaurant(db.Model, SerializerMixin):
 
 
    def __repr__(self):
-       return f'<Filter {self.id}, {self.user_id}, {self.cuisine}, {self.neighborhood}, {self.visited}>'
+       return f'<Random_Restaurant {self.id}, {self.cuisine}, {self.neighborhood}, {self.visited}>'

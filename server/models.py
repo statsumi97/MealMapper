@@ -139,7 +139,7 @@ class Visit(db.Model, SerializerMixin):
    id = db.Column(db.Integer, primary_key=True)
    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'))
-   comment = db.Column(db.String, nullable=True)
+   experience = db.Column(db.String, nullable=True)
 
    #Relationships
    user = db.relationship('User', back_populates='visits')

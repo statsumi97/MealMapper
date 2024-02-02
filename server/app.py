@@ -191,7 +191,7 @@ def log_visit(restaurant_id):
     form_data = request.get_json()
 
     #Create a new list
-    visit = Visit(user_id=user.id, restaurant_id=restaurant_id, comment=form_data.get('comment'))
+    visit = Visit(user_id=user.id, restaurant_id=restaurant_id, experience=form_data.get('experience'))
 
     #Add and commit the new visit
     db.session.add(visit)

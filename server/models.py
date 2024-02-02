@@ -17,6 +17,7 @@ class User(db.Model, SerializerMixin):
    username = db.Column(db.String, nullable=False, unique=True)
    password = db.Column(db.String, nullable=False)
    email = db.Column(db.String, nullable=False, unique=True)
+   profile_picture = db.Column(db.String, nullable=True)
 
 
    #Relationships
@@ -24,6 +25,7 @@ class User(db.Model, SerializerMixin):
    filters = db.relationship('Filter', back_populates='user')
    visits = db.relationship('Visit', back_populates='user')
    random_restaurants = db.relationship('Random_Restaurant', back_populates='user')
+   all_memories = db.relationship('Memory', back_populates=('user')) #Relationship to represent memories created by the user
 
 
    #Serialization
@@ -105,6 +107,7 @@ class Memory(db.Model, SerializerMixin):
 
    #Relationships
    user = db.relationship('User', back_populates='memories')
+   user = db.relationship('User', back_populates='all_memories') #Relationship to represent the user who created the memory
    restaurant = db.relationship('Restaurant', back_populates='memories')
 
 

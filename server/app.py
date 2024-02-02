@@ -6,10 +6,11 @@
 from flask import Flask, make_response, request, jsonify, session
 from flask_restful import Resource
 from flask_cors import cross_origin
-from sqlalchemy.sql.expression import func, random
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from sqlalchemy.sql.expression import func
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash
+import jwt
+from datetime import datetime, timedelta
 
 # Local imports
 from config import app, db, api
@@ -22,18 +23,24 @@ login_manager = LoginManager(app)
 
 #This function generates a token
 def generate_token(user_id):
-    s = Serializer(app.config['SECRET_KEY'], expires_in = 3600) #token expires in 1 hour
-    token = s.dumps({'id': user_id}).decode('utf-8')
+    expiration_time = datetime.utcnow() + timedelta(seconds=3600) #token expires in 1 hour
+    payload = {'id': user_id, 'exp': expiration_time}
+    secret_key = app.config['afraid-of-heights']
+    token = jwt.encode(payload, secret_key, algorithm='HS256').decode('utf-8')
     return token
 
 #This function verifies the token and returns user id
 def verify_token(token):
-    s = Serializer(app.config['SECRET_KEY'])
+    secret_key = app.config['afraid-of-heights']
     try:
-        data = s.loads(token)
-    except:
+        data = jwt.decode(token, secret_key, algorithms=['HS256'])
+        return data['id']
+    except jwt.ExpiredSignatureError:
+        #Token has expired
         return None
-    return data['id']
+    except jwt.InvalidTokenError:
+        #Invalid token
+        return None
 
 # Views go here!
 
@@ -113,7 +120,8 @@ def users():
         new_user = User(
             username = form_data['username'],
             email = form_data['email'],
-            password = form_data['password']
+            password = form_data['password'],
+            profile_picture = form_data['profile_picture']
         )
         db.session.add(new_user)
         db.session.commit()
@@ -328,7 +336,7 @@ def get_random_restaurant():
     if neighborhood:
         query = query.filter(Restaurant.neighborhood == neighborhood)
     if visited is not None:
-        query = query.join(Visit).filter(Visit.user_id == users_by_id().id), Visit.visited == (visited.lower() == 'true')
+        query = query.join(Visit).filter(Visit.user_id == users_by_id().id, Visit.visited == (visited.lower() == 'true')).order_by(func.random())
 
     #Get the filtered restaurants
     restaurants = query.all()
@@ -338,7 +346,7 @@ def get_random_restaurant():
         return jsonify({'error': 'No restaurants found matching the filters'}), 404
     
     #Select a random restaurant
-    random_restaurant = random.choice(restaurants)
+    random_restaurant = query.first()
 
     #Return the random restaurant
     return jsonify(random_restaurant.to_dict()), 200

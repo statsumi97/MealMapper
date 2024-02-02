@@ -25,7 +25,6 @@ class User(db.Model, SerializerMixin):
    filters = db.relationship('Filter', back_populates='user')
    visits = db.relationship('Visit', back_populates='user')
    random_restaurants = db.relationship('Random_Restaurant', back_populates='user')
-   all_memories = db.relationship('Memory', back_populates=('user')) #Relationship to represent memories created by the user
 
 
    #Serialization

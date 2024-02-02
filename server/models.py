@@ -116,9 +116,8 @@ class Memory(db.Model, SerializerMixin):
    #Validations
    @validates('photo')
    def validate_photos(self, key, photo):
-       if not photo or not re.match(r'^https?://(?:[a-z0-9-]+\.)+[a-z]{2,6}(?:/[^/#?]+)+\.(?:jpg|jpeg|gif|png)$', photo):
+       if photo and not re.match(r'^https?://(?:[a-z0-9-]+\.)+[a-z]{2,6}(?:/[^/#?]+)+\.(?:jpg|jpeg|gif|png)$', photo):
            raise ValueError('Invalid photo URL')
-       
        return photo
    
    @validates('story')

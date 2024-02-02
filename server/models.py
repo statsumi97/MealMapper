@@ -124,7 +124,6 @@ class Memory(db.Model, SerializerMixin):
    def validate_story(self, key, story):
        if story and not 1 <= len(story) <= 500:
            raise ValueError('Story must be between 1 and 500 characters')
-       
        return story
 
 

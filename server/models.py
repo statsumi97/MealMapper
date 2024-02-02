@@ -111,6 +111,21 @@ class Memory(db.Model, SerializerMixin):
    #Serializations
    serialize_rules = ('-user.memories', '-restaurant.memories')
 
+   #Validations
+   @validates('photo')
+   def validate_photos(self, key, photo):
+       if not photo or not re.match(r'^https?://(?:[a-z0-9-]+\.)+[a-z]{2,6}(?:/[^/#?]+)+\.(?:jpg|jpeg|gif|png)$', photo):
+           raise ValueError('Invalid photo URL')
+       
+       return photo
+   
+   @validates('story')
+   def validate_story(self, key, story):
+       if story and not 1 <= len(story) <= 500:
+           raise ValueError('Story must be between 1 and 500 characters')
+       
+       return story
+
 
    def __repr__(self):
        return f'<Memory {self.id}, {self.user_id}, {self.restaurant_id}, {self.date_visited}, {self.photo}, {self.story}>'

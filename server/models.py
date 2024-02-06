@@ -4,6 +4,7 @@ from sqlalchemy.orm import validates
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError
 import re
+from datetime import datetime
 
 
 from config import db
@@ -18,14 +19,16 @@ class User(db.Model, SerializerMixin):
    password = db.Column(db.String, nullable=False)
    email = db.Column(db.String, nullable=False, unique=True)
    profile_picture = db.Column(db.String, nullable=True)
-   cuisine = db.Column(db.String, nullable=True)
-   neighborhood = db.Column(db.String, nullable=True)
-   visited = db.Column(db.Boolean, nullable=True)
+#    cuisine = db.Column(db.String, nullable=True)
+#    neighborhood = db.Column(db.String, nullable=True)
+#    visited = db.Column(db.Boolean, nullable=True)
+   account_creation_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+   last_login_date = db.Column(db.DateTime, nullable=True)
 
 
    #Relationships
    memories = db.relationship('Memory', back_populates='user')
-   filters = db.relationship('Filter', back_populates='user')
+   filters = db.relationship('Filter', secondary=filters, backref=db.backref('users', lazy='dynamic'), back_populates='user')
    visits = db.relationship('Visit', back_populates='user')
    random_restaurants = db.relationship('Random_Restaurant', back_populates='user')
 
@@ -77,13 +80,17 @@ class Restaurant(db.Model, SerializerMixin):
    name = db.Column(db.String, nullable=False)
    cuisine = db.Column(db.String, nullable=False)
    neighborhood = db.Column(db.String, nullable=False)
-   visited = db.Column(db.Boolean, nullable=False, default=False)
+   address = db.Column(db.String, nullable=False)
+   rating = db.Column(db.Float, nullable=True)
+   price_range = db.Column(db.String, nullable=True)
+   visited_by_users = db.Column(db.Boolean, nullable=False, default=False)
 
 
    #Relationships
    memories = db.relationship('Memory', back_populates='restaurant')
    visits = db.relationship('Visit', back_populates='restaurant')
    random_restaurants = db.relationship('Random_Restaurant', back_populates='restaurant')
+   visited_by_users = db.relationship('User', secondary='visits')
 
 
    #Serialization
@@ -109,7 +116,6 @@ class Memory(db.Model, SerializerMixin):
 
    #Relationships
    user = db.relationship('User', back_populates='memories')
-   user = db.relationship('User', back_populates='all_memories') #Relationship to represent the user who created the memory
    restaurant = db.relationship('Restaurant', back_populates='memories')
 
 
@@ -151,6 +157,10 @@ class Filter(db.Model, SerializerMixin):
    #Serializations
    serialize_rules=('-user.filters', )
 
+filters = db.Table('filters',
+                   db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+                   db.Column('filter_id', db.Integer, db.ForeignKey('filters.id'))
+)
 class Visit(db.Model, SerializerMixin):
    __tablename__ = 'visits'
 
@@ -158,6 +168,7 @@ class Visit(db.Model, SerializerMixin):
    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurants.id'))
    experience = db.Column(db.String, nullable=True)
+   date_of_visit = db.Column(db.Date, nullable=False)
 
    #Relationships
    user = db.relationship('User', back_populates='visits')

@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import SignUp from './SignUp';
 
 function App() {
-  return <h1>Project Client</h1>;
+  return (
+    <div>
+      <Router>
+        <Switch>
+          <Route exact path='/users' element={<SignUp />}>
+            <SignUp />
+          </Route>
+        </Switch>
+      </Router>
+    </div>
+  )
 }
 
 export default App;

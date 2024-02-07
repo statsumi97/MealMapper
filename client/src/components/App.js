@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import SignUp from './SignUp';
+import React from 'react';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import Register from './Register';
 
 function App() {
   return (
-    <div>
-      <Router>
-        <Switch>
-          <Route exact path='/users' element={<SignUp />}>
-            <SignUp />
-          </Route>
-        </Switch>
-      </Router>
-    </div>
-  )
+    <Router>
+      <Switch>
+        <Route path='/register' component={Register} />
+      </Switch>
+    </Router>
+  );
 }
 
 export default App;

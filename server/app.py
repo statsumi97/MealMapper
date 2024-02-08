@@ -7,6 +7,7 @@ from flask import Flask, make_response, request
 from flask_restful import Resource
 from flask_cors import cross_origin
 import random
+from datetime import datetime
 
 # Local imports
 from config import app, db, api
@@ -229,6 +230,45 @@ def restaurant_by_id(id):
             )
     
     return response
+
+#Route for posting user experiences and retrieving all experiences
+@app.route('/experiences', methods=['GET', 'POST'])
+def experiences():
+    if request.method == 'POST':
+        try: 
+            form_data = request.get_json()
+            #Convert the visit_date string to a Python date object
+            visit_date = datetime.strptime(form_data['visit_date'], '%Y-$m-%d').date()
+
+            new_experiences = Experiences(
+                user_id = form_data['user_id'],
+                restaurant_id = form_data['restaurant_id'],
+                visit_date = visit_date,
+                image_url = form_data['image_url'],
+                story = form_data['story']
+            )
+            db.session.add(new_experiences)
+            db.session.commit()
+            response = make_response(
+                new_experiences.to_dict(rules=('-user', '-restaurant')),
+                201
+            )
+        except ValueError:
+            response = make_response(
+                {'error': 'Validation error'},
+                400
+            )
+
+    elif request.method == 'GET':
+        experiences = Experiences.query.all()
+        experiences_dict = [experience.to_dict(rules =('-user', '-restaurant')) for experience in experiences]
+        response = make_response(
+            experiences_dict,
+            200
+        )
+    
+    return response
+
 
 if __name__ == '__main__':
     app.run(debug=True)

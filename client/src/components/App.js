@@ -7,6 +7,9 @@ import SignupForm from './SignupForm';
 import RestaurantsList from './RestaurantsList'
 import AddRestaurantForm from './AddRestaurantForm';
 import EditRestaurantForm from './EditRestaurantForm';
+import ShareExperienceForm from './ShareExperienceForm';
+import ViewExperiences from './ViewExperiences';
+import { UserProvider } from '../context/UserContext';
 
 function App() {
   const navigate = useNavigate(); // Initialize useNavigate hook
@@ -56,14 +59,16 @@ function App() {
   return (
     <div className='App'>
       {/* <BrowserRouter> */}
-      <Routes>
-          {/* <Route path='/' element={<App />} /> */}
-          <Route path='/signup' element={<SignupForm />} />
-          <Route path='/home' element={<RestaurantsList/>} />
-          <Route path='/restaurants/new' element={<AddRestaurantForm/>} />
-          <Route path='/restaurants/edit/:restaurantId' element={<EditRestaurantForm/>} />
-          {/* <Route path='/restaurants/new' element={<AddRestaurantForm/>} /> */}
-      </Routes>
+        <Routes>
+            {/* <Route path='/' element={<App />} /> */}
+            <Route path='/signup' element={<SignupForm />} />
+            <Route path='/home' element={<RestaurantsList/>} />
+            <Route path='/restaurants/new' element={<AddRestaurantForm/>} />
+            <Route path='/restaurants/edit/:restaurantId' element={<EditRestaurantForm/>} />
+            <Route path='/experiences/new' element={<ShareExperienceForm/>} />
+            <Route path='/experiences' element={<ViewExperiences/>} />
+            {/* <Route path='/restaurants/new' element={<AddRestaurantForm/>} /> */}
+        </Routes>
       {/* </BrowserRouter> */}
       <h1 className='login-title'>Welcome to MealMapper!</h1>
       {!loggedIn ? (

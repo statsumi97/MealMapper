@@ -115,6 +115,8 @@ const RestaurantsList = () => {
                 ))}
             </ul>
             <Link to='/restaurants/new'>Add New Restaurant</Link>
+            <Link to='/experiences'>See Past Memories</Link>
+            <Link to='/experiences/new'>Share New Memory</Link>
         </div>
     );
 };

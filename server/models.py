@@ -4,7 +4,7 @@ from sqlalchemy.orm import validates
 from datetime import datetime
 import re
 
-from config import db
+from config import db 
 
 class Users(db.Model, SerializerMixin):
     __tablename__ = 'users'

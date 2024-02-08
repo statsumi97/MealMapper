@@ -1,24 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-
-//So cuisine is the only thing that actually filters on the webpage. Any idea why neighborhood and visited don't work?
-//how do i add other filters to the query string? /
-//each filter now works separately, but for example if I hit "visited" and then try to search for a neighborhood it won't show up
-//I think the issue is that the query string is being overwritten each time a new filter is added. I need to append to the query string instead of overwriting it
-//I think I need to use the URLSearchParams object to append to the query string
-//how do i code this?
-//I think I need to create a new URLSearchParams object and then use the append method to add to the query string
-//can you show me how this works in code?
-//yeah but can you show me
-//Please use URLSearchParams object to append to the query string in the fetchRestaurants function 
-//I'm not sure how to do this
-
+import { Link, useNavigate } from 'react-router-dom';
 
 const RestaurantsList = () => {
     const [restaurants, setRestaurants] = useState([]);
     const [cuisine, setCuisine] = useState('');
     const [neighborhood, setNeighborhood] = useState('');
     const [visited, setVisited] = useState(false);
+    const [randomRestaurant, setRandomRestaurant] = useState('');
+    const navigate = useNavigate();
 
     const fetchRestaurants = () => {
         //Initialize URLParams object
@@ -38,6 +27,46 @@ const RestaurantsList = () => {
         fetch(queryURL)
         .then(response => response.json())
         .then(data => setRestaurants(data));
+    };
+
+    const fetchRandomRestaurant = () => {
+        const params = new URLSearchParams();
+        if (cuisine) params.append('cuisine', cuisine);
+        if (neighborhood) params.append('neighborhood', neighborhood);
+        if (visited !== '') params.append('visited', visited);
+
+        const queryURL = `/restaurants/random?${params.toString()}`;
+
+        fetch(queryURL)
+        .then(response => response.json())
+        .then(data => {
+            setRandomRestaurant(data);
+            alert(`You should try: ${data.name} - ${data.cuisine} - ${data.neighborhood}!`)
+        }).catch(error => {
+            console.error('Error fetching random restaurant', error);
+            alert('No matching restaurant for the selected filters')
+        });
+    }
+
+    const deleteRestaurant = (restaurantId) => {
+        fetch(`/restaurants/${restaurantId}`, {
+            method: 'DELETE',
+        }).then((response) => {
+            if (response.ok) {
+                //Remove the restaurant from the state to update the UI
+                setRestaurants(restaurants.filter(restaurant => restaurant.id !== restaurantId));
+                alert('Restaurant deleted successfully');
+            } else {
+                alert('Error deleting restaurant');
+            }
+        }).catch(error => {
+            console.error('Error deleting restaurant', error);
+            alert('Error deleting restaurant');
+        })
+    };
+
+    const editRestaurant = (restaurantId) => {
+        navigate(`/restaurants/edit/${restaurantId}`);
     };
 
     useEffect(() => {
@@ -69,10 +98,20 @@ const RestaurantsList = () => {
                     <option value='false'>Not Visited</option>
                 </select>
                 <button onClick={fetchRestaurants}>Filter</button>
+                <button onClick={fetchRandomRestaurant}>Randomize</button>
             </div>
+            {randomRestaurant && (
+                <div>
+                    <h3>Random Pick</h3>
+                    <p>{randomRestaurant.name} - {randomRestaurant.cuisine} - {randomRestaurant.neighborhood}</p>
+                </div>
+            )}
             <ul>
                 {restaurants.map(restaurant => (
-                    <li key={restaurant.id}>{restaurant.name} - {restaurant.cuisine} - {restaurant.neighborhood}</li>
+                    <li key={restaurant.id}>{restaurant.name} - {restaurant.cuisine} - {restaurant.neighborhood}
+                        <button onClick={() => deleteRestaurant(restaurant.id)}>Delete</button>
+                        <button onClick={() => editRestaurant(restaurant.id)}>Edit</button>
+                    </li>
                 ))}
             </ul>
             <Link to='/restaurants/new'>Add New Restaurant</Link>

@@ -6,6 +6,7 @@ import * as yup from 'yup'
 import SignupForm from './SignupForm';
 import RestaurantsList from './RestaurantsList'
 import AddRestaurantForm from './AddRestaurantForm';
+import EditRestaurantForm from './EditRestaurantForm';
 
 function App() {
   const navigate = useNavigate(); // Initialize useNavigate hook
@@ -60,6 +61,7 @@ function App() {
           <Route path='/signup' element={<SignupForm />} />
           <Route path='/home' element={<RestaurantsList/>} />
           <Route path='/restaurants/new' element={<AddRestaurantForm/>} />
+          <Route path='/restaurants/edit/:restaurantId' element={<EditRestaurantForm/>} />
           {/* <Route path='/restaurants/new' element={<AddRestaurantForm/>} /> */}
       </Routes>
       {/* </BrowserRouter> */}

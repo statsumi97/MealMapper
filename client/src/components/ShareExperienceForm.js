@@ -9,6 +9,8 @@ const ShareExperienceForm = () => {
     const navigate = useNavigate();
     const [restaurants, setRestaurants] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
+    //State to hold the uploaded image URL
+    const [image, setImage] = useState('');
 
     useEffect(() => {
         //Fetch the list of restaurants to populate search function
@@ -33,6 +35,7 @@ const ShareExperienceForm = () => {
         const payload = {
             ...formik.values,
             user_id,
+            image_url: image, //Include 'image' state as part of submission payload
         }
         fetch('/experiences', {
             method: 'POST',
@@ -63,7 +66,7 @@ const ShareExperienceForm = () => {
             restaurant_id: yup.number().required('Restaurant is required'),
             visit_date: yup.date().required('Visit date is required'),
             image_url: yup.string(),
-            story: yup.string().required('Story is required')
+            story: yup.string().required('Text is required')
         }),
         onSubmit: (values) => {
             console.log("Form submitted", values)
@@ -90,6 +93,25 @@ const ShareExperienceForm = () => {
             });
         },
     });
+
+    const handleImageUpload = (e) => {
+        const files = e.target.files;
+        const formData = new FormData();
+        formData.append('file', files[0]);
+        formData.append('upload_preset', 'yt1lmdwp'); //Cloudinary upload preset
+
+        fetch('https://api.cloudinary.com/v1_1/dwbgeypis/image/upload', { //Cloud name from Cloudinary
+            method: 'POST',
+            body: formData
+        }) 
+        .then(response => response.json())
+        .then(data => {
+            if (data.secure_url) {
+                setImage(data.secure_url);
+            }
+        })
+        .catch(error => console.log(error));
+    };
 
     return (
         <div>
@@ -130,6 +152,11 @@ const ShareExperienceForm = () => {
                     onChange={formik.handleChange}
                     value={formik.values.image_url}
                     placeholder='Image URL'
+                />
+                <input
+                    type='file'
+                    onChange={handleImageUpload}
+                    accept='image/*'
                 />
                 <textarea
                     id='story'

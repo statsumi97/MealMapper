@@ -48,6 +48,7 @@ const AddRestaurantForm = () => {
                     value={formik.values.name}
                     placeholder='Restaurant Name'
                 />
+                {formik.touched.name && formik.errors.name && <div style={{color: 'red'}}>{formik.errors.name}</div>}
                 <input
                     id='cuisine'
                     name='cuisine'
@@ -56,6 +57,7 @@ const AddRestaurantForm = () => {
                     value={formik.values.cuisine}
                     placeholder='Cuisine'
                 />
+                {formik.touched.cuisine && formik.errors.cuisine && <div style={{color: 'red'}}>{formik.errors.cuisine}</div>}
                 <input
                     id='neighborhood'
                     name='neighborhood'
@@ -64,6 +66,7 @@ const AddRestaurantForm = () => {
                     value={formik.values.neighborhood}
                     placeholder='Neighborhood'
                 />
+                {formik.touched.neighborhood && formik.errors.neighborhood && <div style={{color: 'red'}}>{formik.errors.neighborhood}</div>}
                 <label>
                     Visited?
                     <input

@@ -85,21 +85,30 @@ def restaurants():
         cuisine = request.args.get('cuisine')
         neighborhood = request.args.get('neighborhood')
         visited = request.args.get('visited')
+        search_query = request.args.get('search', '').lower()
 
         #Start with a base query
         query = Restaurants.query
 
+        #Apply search query if provided
+        if search_query:
+            query = query.filter(db.or_(
+                Restaurants.name.ilike(f'%{search_query}%'),
+                Restaurants.cuisine.ilike(f'%{search_query}%'),
+                Restaurants.neighborhood.ilike(f'%{search_query}%')
+            ))
+
         #Filter by cuisine if the parameter is provided
         if cuisine:
-            query = query.filter(Restaurants.cuisine == cuisine)
+            query = query.filter(Restaurants.cuisine.ilike(f'%{cuisine}%'))
 
         #Filter by neighborhood if the parameter is provided
         if neighborhood:
-            query = query.filter(Restaurants.neighborhood == neighborhood)
+            query = query.filter(Restaurants.neighborhood.ilike(f'%{neighborhood}%'))
 
-        #Filter by visited status if the parameter is provided
-        if visited is not None:
-            visited_bool = visited.lower() in ['true', '1', 't']
+        #Handle the absence of the visited parameter as a request for both visited and not visited restaurants
+        if visited in ['true', 'false']:
+            visited_bool = visited.lower() == 'true'
             query = query.filter(Restaurants.visited == visited_bool)
 
         #Execute the query
@@ -237,15 +246,17 @@ def experiences():
     if request.method == 'POST':
         try: 
             form_data = request.get_json()
+            #Ensure the image_url is received from the request; provide a default value if not provided
+            image_url = form_data.get('image_url', '')
             #Convert the visit_date string to a Python date object
             visit_date = datetime.strptime(form_data['visit_date'], '%Y-%m-%d').date()
 
             new_experiences = Experiences(
-                user_id = form_data['user_id'],
-                restaurant_id = form_data['restaurant_id'],
-                visit_date = visit_date,
-                image_url = form_data['image_url'],
-                story = form_data['story']
+                user_id=form_data['user_id'],
+                restaurant_id=form_data['restaurant_id'],
+                visit_date=visit_date,
+                image_url=image_url, #Save the image URL received from the form data
+                story=form_data['story']
             )
             db.session.add(new_experiences)
             db.session.commit()
@@ -260,12 +271,17 @@ def experiences():
             )
 
     elif request.method == 'GET':
-        experiences = Experiences.query.all()
+        search_query = request.args.get('restaurantName', '').lower()
+        query = Experiences.query.join(Restaurants, Experiences.restaurant_id == Restaurants.id)
+        if search_query:
+            query = query.filter(Restaurants.name.ilike(f'%{search_query}%'))
+
+        experiences = query.all()
         experiences_dict = [experience.to_dict(rules =('-user', '-restaurant')) for experience in experiences]
         response = make_response(
             experiences_dict,
             200
-        )
+            )
     
     return response
 
@@ -276,13 +292,15 @@ def handle_experience(experience_id):
 
     if request.method == 'PATCH':
         data = request.get_json()
+        #Ensure the image_url is received from the request; provide a default value if not provided
+        image_url = data.get('image_url', '')
         if 'restaurant_id' in data:
             experience.restaurant_id = data['restaurant_id']
         if 'visit_date' in data:
             #Ensure the visit date is properly formatted and converted to a date object
             experience.visit_date = datetime.strptime(data['visit_date'], '%Y-%m-%d').date()
         if 'image_url' in data:
-            experience.image_url = data['image_url']
+            experience.image_url = image_url #Save the image URL received from the form data
         if 'story' in data:
             experience.story = data['story']
         

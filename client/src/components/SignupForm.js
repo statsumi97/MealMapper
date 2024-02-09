@@ -10,13 +10,9 @@ const SignupForm = () => {
     const navigate = useNavigate();
 
     const formSchema = yup.object().shape({
-        username: yup.string()
-            .required('Required'),
-        user_email: yup.string()
-            .email('Invalid email address')
-            .required('Required'),
-        passwordhash: yup.string()
-            .required('Required'),
+        username: yup.string().required('Username is required'),
+        user_email: yup.string().email('Invalid email').required('Email is required'),
+        passwordhash: yup.string().required('Password is required'),
     });
 
     const formik = useFormik({
@@ -60,10 +56,7 @@ const SignupForm = () => {
             value={formik.values.user_email}
             onBlur={formik.handleBlur}
             />
-            <p>{formik.touched.user_email && formik.errors.user_email ? (
-                <h3>{formik.errors.user_email}</h3>
-            ) : ('')}</p>
-            
+            {formik.touched.user_email && formik.errors.user_email && <div style={{color: 'red'}}>{formik.errors.user_email}</div>}
             <label>Username</label>
             <br />
             <input
@@ -73,9 +66,10 @@ const SignupForm = () => {
             value={formik.values.username}
             onBlur={formik.handleBlur}
             />
-            <p>{formik.touched.username && formik.errors.username ? (
+            {formik.touched.username && formik.errors.username && <div style={{color: 'red'}}>{formik.errors.username}</div>}
+            {/* <p>{formik.touched.username && formik.errors.username ? (
                 <h3>{formik.errors.username}</h3>
-            ) : ('')}</p>
+            ) : ('')}</p> */}
             
             <label>Password</label>
             <br />
@@ -86,9 +80,10 @@ const SignupForm = () => {
             value={formik.values.passwordhash}
             onBlur={formik.handleBlur}
             />
-            <p>{formik.touched.passwordhash && formik.errors.passwordhash ? (
+            {formik.touched.passwordhash && formik.errors.passwordhash && <div style={{color: 'red'}}>{formik.errors.passwordhash}</div>}
+            {/* <p>{formik.touched.passwordhash && formik.errors.passwordhash ? (
                 <h3>{formik.errors.passwordhash}</h3>
-            ) : ('')}</p>
+            ) : ('')}</p> */}
             <button type='submit'>Submit</button>
             <button>
                 <Link className='link-to-login' to={'/'}>Login</Link></button>

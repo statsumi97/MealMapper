@@ -25,42 +25,47 @@ function App() {
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: ''
+        email: '',
+        password: ''
     },
     validationSchema: formSchema,
     onSubmit: (values) => {
-      console.log('word')
       fetch('/login', {
-
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: values.email,
-          password: values.password
-        })
-      }).then((r) => {
-        if (r.ok) {
-          r.json().then(user => {
-            if (user.id) {
-              console.log(user.id)
-              localStorage.setItem('user_id', user.id)
-              console.log('you signed in')
-              setForm(formSchema)
-              setLoggedIn(true)
-              navigate('/home'); // Redirect to /home page after login
-            } else {
-              console.log('Login failed: ', user)
-            }
-          })
-        } else {
-          r.json().then((err) => console.log('error'))
-        }
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              email: values.email,
+              password: values.password
+          }),
       })
-    }
-  })
+      .then(async response => {
+          const data = await response.json(); // Await for the JSON data
+          if (response.ok) {
+              // Handle successful login here
+              console.log(data); // Assuming 'data' contains the user object
+              localStorage.setItem('user_id', data.id);
+              alert('You signed in');
+              setLoggedIn(true);
+              navigate('/home'); // Redirect to /home page after login
+          } else {
+              // If the server responds with a 401 status, indicate that the password is incorrect
+              if (response.status === 401) {
+                  formik.setErrors({ password: 'Password is incorrect' });
+              } else {
+                  // For other errors, use the message from the server if available, or a generic message
+                  formik.setErrors({ email: data.message || 'Login failed' });
+              }
+          }
+      })
+      .catch(error => {
+          console.error('Login error:', error);
+          // Handle network error or other unforeseen errors
+          formik.setErrors({ email: 'Network error, please try again later.' });
+      });
+  },
+});
 
   return (
     <div className='App'>
@@ -88,9 +93,7 @@ function App() {
           placeholder='Email'
           onBlur={formik.handleBlur}>
         </input>
-          <p>{formik.touched.email && formik.errors.email ? (
-          <h3>{formik.errors.email}</h3>
-          ) : ('')}</p>
+        {formik.touched.email && formik.errors.email && <div style={{color: 'red'}}>{formik.errors.email}</div>}
          <input
           type='password'
           name='password'
@@ -100,9 +103,7 @@ function App() {
           onBlur={formik.handleBlur}>
 
          </input>
-         <p>{formik.touched.password && formik.errors.password ? (
-         <h3>{formik.errors.password}</h3>
-         ) : ('')}</p>
+         {formik.touched.password && formik.errors.password && <div style={{color: 'red'}}>{formik.errors.password}</div>}
          <button className='btn btn-danger login_button' type='submit'>Log In</button>
 
       </form>

@@ -5,24 +5,29 @@ const RestaurantsList = () => {
     const [restaurants, setRestaurants] = useState([]);
     const [cuisine, setCuisine] = useState('');
     const [neighborhood, setNeighborhood] = useState('');
-    const [visited, setVisited] = useState(false);
+    const [visited, setVisited] = useState('');
     const [randomRestaurant, setRandomRestaurant] = useState('');
     const navigate = useNavigate();
+    //Add a state for the search term
+    const [searchTerm, setSearchTerm] = useState('');
 
     const fetchRestaurants = () => {
         //Initialize URLParams object
-        const params = new URLSearchParams();
+        const params = new URLSearchParams({cuisine, neighborhood, visited: visited.toString()});
+        if (searchTerm) params.append('search', searchTerm);
 
         //Append parameters if they exist
         if (cuisine) params.append('cuisine', cuisine);
         if (neighborhood) params.append('neighborhood', neighborhood);
         
-        //Check if visited has been set (including false expicitly)
-        if(visited !== '') params.append('visited', visited)
+        //Only append 'visited' if it has a value of 'true' or 'false'
+        if (visited === 'true' || visited === 'false') {
+            params.append('visited', visited);
+        }
 
         //Construct the query string with parameters
         const queryString = params.toString();
-        const queryURL = `/restaurants?${queryString}`;
+        const queryURL = `/restaurants?${params.toString()}`;
 
         fetch(queryURL)
         .then(response => response.json())
@@ -33,10 +38,14 @@ const RestaurantsList = () => {
         const params = new URLSearchParams();
         if (cuisine) params.append('cuisine', cuisine);
         if (neighborhood) params.append('neighborhood', neighborhood);
-        if (visited !== '') params.append('visited', visited);
+        if (visited !== '') {
+            //Visited can be true, false, or null
+            params.append('visited', visited);
+        }
 
         const queryURL = `/restaurants/random?${params.toString()}`;
 
+        console.log('Fetching restaurants with URL:', queryURL);
         fetch(queryURL)
         .then(response => response.json())
         .then(data => {
@@ -99,6 +108,13 @@ const RestaurantsList = () => {
                 </select>
                 <button onClick={fetchRestaurants}>Filter</button>
                 <button onClick={fetchRandomRestaurant}>Randomize</button>
+                <input
+                    type='text'
+                    placeholder='Search restaurants...'
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button onClick={fetchRestaurants}>Search</button>
             </div>
             {randomRestaurant && (
                 <div>

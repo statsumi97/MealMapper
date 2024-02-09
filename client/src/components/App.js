@@ -10,6 +10,7 @@ import EditRestaurantForm from './EditRestaurantForm';
 import ShareExperienceForm from './ShareExperienceForm';
 import ViewExperiences from './ViewExperiences';
 import { UserProvider } from '../context/UserContext';
+import EditPostsForm from './EditPostsForm';
 
 function App() {
   const navigate = useNavigate(); // Initialize useNavigate hook
@@ -36,11 +37,16 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(values)
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password
+        })
       }).then((r) => {
         if (r.ok) {
           r.json().then(user => {
             if (user.id) {
+              console.log(user.id)
+              localStorage.setItem('user_id', user.id)
               console.log('you signed in')
               setForm(formSchema)
               setLoggedIn(true)
@@ -67,6 +73,7 @@ function App() {
             <Route path='/restaurants/edit/:restaurantId' element={<EditRestaurantForm/>} />
             <Route path='/experiences/new' element={<ShareExperienceForm/>} />
             <Route path='/experiences' element={<ViewExperiences/>} />
+            <Route path='/experiences/edit/:experienceId' element={<EditPostsForm/>}  />
             {/* <Route path='/restaurants/new' element={<AddRestaurantForm/>} /> */}
         </Routes>
       {/* </BrowserRouter> */}

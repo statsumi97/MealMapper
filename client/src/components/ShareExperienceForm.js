@@ -27,6 +27,28 @@ const ShareExperienceForm = () => {
         : [];
     // console.log('filteredRestaurants:', filteredRestaurants)
 
+    const handleSubmitDirectly = (e) => {
+        e.preventDefault();
+        const user_id = localStorage.getItem('user_id');
+        const payload = {
+            ...formik.values,
+            user_id,
+        }
+        fetch('/experiences', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload) //use the updated payload with user_id
+        }).then(response => {
+            if (response.ok) {
+                navigate('/experiences'); //Redirect back to the home page after submission
+            } else {
+                console.log('An error occurred');
+            }
+        });
+    }
+
     const formik = useFormik({
         initialValues: {
             user_id: localStorage.getItem('user_id'),
@@ -44,6 +66,7 @@ const ShareExperienceForm = () => {
             story: yup.string().required('Story is required')
         }),
         onSubmit: (values) => {
+            console.log("Form submitted", values)
             //Retrieve user_id from local storage
             // const userId = localStorage.getItem('user_id');
 
@@ -71,7 +94,7 @@ const ShareExperienceForm = () => {
     return (
         <div>
             <h2>Share Your Memories!</h2>
-            <form onSubmit={formik.handleSubmit}>
+            <form onSubmit={handleSubmitDirectly}>
                 <input
                     type='text'
                     placeholder='Search Restaurants'
@@ -108,10 +131,6 @@ const ShareExperienceForm = () => {
                     value={formik.values.image_url}
                     placeholder='Image URL'
                 />
-                <input 
-                    type='submit'
-                    value='Submit'
-                />
                 <textarea
                     id='story'
                     name='story'
@@ -119,6 +138,7 @@ const ShareExperienceForm = () => {
                     value={formik.values.story}
                     placeholder='Share your memory'
                 />
+                <button type='submit'>Submit</button>
             </form>
             <button onClick={() => navigate('/home')}>Back to Home Page</button>
             <button onClick={() => navigate('/experiences')}>View Past Posts</button>

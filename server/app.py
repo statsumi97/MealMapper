@@ -238,7 +238,7 @@ def experiences():
         try: 
             form_data = request.get_json()
             #Convert the visit_date string to a Python date object
-            visit_date = datetime.strptime(form_data['visit_date'], '%Y-$m-%d').date()
+            visit_date = datetime.strptime(form_data['visit_date'], '%Y-%m-%d').date()
 
             new_experiences = Experiences(
                 user_id = form_data['user_id'],
@@ -267,6 +267,45 @@ def experiences():
             200
         )
     
+    return response
+
+#Route for editing and deleting user posts
+@app.route('/experiences/<int:experience_id>', methods=['GET', 'PATCH', 'DELETE'])
+def handle_experience(experience_id):
+    experience = Experiences.query.get_or_404(experience_id)
+
+    if request.method == 'PATCH':
+        data = request.get_json()
+        if 'restaurant_id' in data:
+            experience.restaurant_id = data['restaurant_id']
+        if 'visit_date' in data:
+            #Ensure the visit date is properly formatted and converted to a date object
+            experience.visit_date = datetime.strptime(data['visit_date'], '%Y-%m-%d').date()
+        if 'image_url' in data:
+            experience.image_url = data['image_url']
+        if 'story' in data:
+            experience.story = data['story']
+        
+        db.session.commit()
+        response = make_response(
+            experience.to_dict(rules=('-user', '-restaurant')),
+            200
+        )
+    
+    elif request.method == 'DELETE':
+        db.session.delete(experience)
+        db.session.commit()
+        response = make_response(
+            {},
+            204
+        )
+    
+    elif request.method == 'GET':
+        response = make_response(
+            experience.to_dict(rules=('-user', '-restaurant')),
+            200
+        )
+
     return response
 
 

@@ -88,14 +88,20 @@ const RestaurantsList = () => {
     //Fetch user's favorites and determine whether each restaurant in the list is a favorite
     const userId = localStorage.getItem('user_id');
     const [userFavorites, setUserFavorites] = useState([]);
+    
+    const fetchUserFavorites = () => {
+      fetch(`/users/${userId}/favorites`)
+        .then(response => response.json())
+        .then(data => {
+          const favoriteIds = data.map(favorite => favorite.id);
+          setUserFavorites(favoriteIds);
+        })
+        .catch(error => console.error('Error fetching user favorites', error));
+    };
 
     useEffect(() => {
-        //Fetch the user's favorite restaurants on component mount
-        fetch(`/users/${userId}/favorites`)
-            .then(response => response.json())
-            .then(data => setUserFavorites(data.map(favorite => favorite.id)))
-            .catch(error => console.error('Error fetching user favorites', error));
-    }, []); //Empty dependency array means this effect runs once on mount 
+      fetchUserFavorites();
+    }, []);
 
     return (
         <div className="min-h-screen bg-y2k-bg bg-cover p-10">
@@ -157,9 +163,7 @@ const RestaurantsList = () => {
                       userId={userId}
                       restaurantId={restaurant.id}
                       isFavorited={userFavorites.includes(restaurant.id)}
-                      onToggle={() => {
-                        // Logic to refresh favorites...
-                      }}
+                      onToggle={fetchUserFavorites}
                     />
                     <button onClick={() => deleteRestaurant(restaurant.id)} className="btn btn-error btn-xs">Delete</button>
                     <button onClick={() => editRestaurant(restaurant.id)} className="btn btn-info btn-xs">Edit</button>

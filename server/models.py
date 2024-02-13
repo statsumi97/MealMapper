@@ -71,7 +71,7 @@ class Restaurants(db.Model, SerializerMixin):
     favorited_by_users = db.relationship('Users', secondary=user_favorites, back_populates='favorite_restaurants')
 
     #SERIALIZATION
-    serialize_rules = ('-experiences.restaurant', '-favorited_by_users.favorite_restaurants', )
+    serialize_rules = ('-experiences.restaurant', '-favorited_by_users.favorite_restaurants', '-experiences.user', )
 
     def __repr__(self):
         return f'<Restaurants {self.id}, {self.name}>'

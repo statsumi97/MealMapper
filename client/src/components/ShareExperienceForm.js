@@ -114,61 +114,60 @@ const ShareExperienceForm = () => {
     };
 
     return (
-        <div>
-            <h2>Share Your Memories!</h2>
-            <form onSubmit={handleSubmitDirectly}>
-                <input
-                    type='text'
-                    placeholder='Search Restaurants'
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <select
-                    id='restaurant_id' 
-                    name='restaurant_id'
-                    onChange={formik.handleChange}
-                    value={formik.values.restaurant_id}
-                    
-                >
-                    <option value=''>Select a Restaurant</option>
-                    {filteredRestaurants.map(restaurant => (
-                        <option key={restaurant.id} value={restaurant.id}>
-                            {restaurant.name}
-                        </option>
-                    ))}
-
-                </select>
-                <input
-                    id='visit_date'
-                    name='visit_date'
-                    type='date'
-                    onChange={formik.handleChange}
-                    value={formik.values.visit_date}
-                    placeholder='Visit Date'
-                />
-                <input
-                    id='image_url'
-                    name='image_url'
-                    type='text'
-                    onChange={formik.handleChange}
-                    value={formik.values.image_url}
-                    placeholder='Image URL'
-                />
-                <input
-                    type='file'
-                    onChange={handleImageUpload}
-                    accept='image/*'
-                />
-                <textarea
-                    id='story'
-                    name='story'
-                    onChange={formik.handleChange}
-                    value={formik.values.story}
-                    placeholder='Share your memory'
-                />
-                <button type='submit'>Submit</button>
-            </form>
-            <button onClick={() => navigate('/home')}>Back to Home Page</button>
-            <button onClick={() => navigate('/experiences')}>View Past Posts</button>
+        <div className="min-h-screen bg-[url('https://64.media.tumblr.com/bcfea4a5e8ad504a317d3945a52a66cd/ef88cccc47cd17c9-77/s75x75_c1/4118951c5afbe9ebec4ba4373180fadbcb463a28.png')] bg-cover flex items-center justify-center">
+            <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-xl space-y-4">
+                <h2 className="text-2xl font-bold text-center">Share Your Memories!</h2>
+                <form onSubmit={handleSubmitDirectly} className="space-y-4">
+                    <input
+                        type="text"
+                        placeholder="Search Restaurants"
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="input input-bordered w-full"
+                    />
+                    <select
+                        id="restaurant_id" 
+                        name="restaurant_id"
+                        onChange={formik.handleChange}
+                        value={formik.values.restaurant_id}
+                        className="select select-bordered w-full"
+                    >
+                        <option value="">Select a Restaurant</option>
+                        {filteredRestaurants.map(restaurant => (
+                            <option key={restaurant.id} value={restaurant.id}>
+                                {restaurant.name}
+                            </option>
+                        ))}
+                    </select>
+                    <input
+                        id="visit_date"
+                        name="visit_date"
+                        type="date"
+                        onChange={formik.handleChange}
+                        value={formik.values.visit_date}
+                        className="input input-bordered w-full"
+                    />
+                    <input
+                        type="file"
+                        onChange={handleImageUpload}
+                        accept="image/*"
+                        className="file:btn file:btn-primary"
+                    />
+                    {image && <img src={image} alt="Uploaded" className="mt-4 max-w-xs mx-auto" />}
+                    <textarea
+                        id="story"
+                        name="story"
+                        onChange={formik.handleChange}
+                        value={formik.values.story}
+                        placeholder="Share your memory"
+                        className="textarea textarea-bordered w-full"
+                    />
+                    <button type="submit" className="btn btn-primary w-full">Submit</button>
+                </form>
+                <div className="flex justify-between">
+                    <button onClick={() => navigate('/home')} className="btn btn-outline btn-accent">Back to Home Page</button>
+                    <button onClick={() => navigate('/experiences')} className="btn btn-outline btn-accent">View Past Posts</button>
+                </div>
+            </div>
         </div>
     );
 };

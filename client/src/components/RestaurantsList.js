@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import FavoriteButton from './FavoriteButton';
+import cuisineColors from './cuisineColors';
 
-const RestaurantsList = () => {
+const RestaurantsList = ({}) => {
     const [restaurants, setRestaurants] = useState([]);
     const [cuisine, setCuisine] = useState('');
     const [neighborhood, setNeighborhood] = useState('');
@@ -153,7 +154,9 @@ const RestaurantsList = () => {
           </div>
           <ul className="space-y-4">
             {restaurants.map(restaurant => (
-              <li key={restaurant.id} className="bg-white bg-opacity-80 rounded-lg p-4 shadow-md">
+              <li key={restaurant.id}
+                className="bg-white bg-opacity-80 rounded-lg p-4 shadow-md"
+                style={{backgroundColor: cuisineColors[restaurant.cuisine] || 'defaultBackgroundColor'}}>
                 <div className="flex justify-between items-center">
                   <span>
                     {restaurant.name} - {restaurant.cuisine} - {restaurant.neighborhood}

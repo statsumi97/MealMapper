@@ -3,74 +3,109 @@
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;600&display=swap');
 
+/* Global Styles */
 body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #fdfdff;
-  overflow-x: hidden;
+  font-family: 'MS Gothic', 'Verdana', sans-serif;
+  background-image: url('https://64.media.tumblr.com/bcfea4a5e8ad504a317d3945a52a66cd/ef88cccc47cd17c9-77/s75x75_c1/4118951c5afbe9ebec4ba4373180fadbcb463a28.png');
+  background-color: #f0e7ff; /* Light pastel background */
+  color: #333; /* Dark text for readability */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Custom Y2K Styles */
-.y2k-title {
-  font-family: 'Press Start 2P', cursive;
-  color: #ff00cc;
-  text-shadow: 2px 2px #000000;
+/* Layout Containers */
+#container {
+  max-width: 915px;
+  margin: 15px auto;
+  padding: 5px;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.85); /* Slightly transparent white */
 }
 
-.y2k-btn {
-  background-image: linear-gradient(90deg, #ff00cc 0%, #3333ff 100%);
-  color: #ffffff;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 5px;
-  font-weight: bold;
-  transition: transform 0.2s ease-in-out;
-}
-
-.y2k-btn:hover {
-  transform: scale(1.1);
-}
-
-.y2k-input {
-  border: 2px solid #ff00cc;
+#section-1, #section-2, #section-3 {
   padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 15px;
 }
 
-.y2k-link {
-  color: #3333ff;
+#section-1 {
+  float: left;
+  width: 150px;
+}
+
+#section-2 {
+  margin: 0 auto;
+  width: 525px;
+}
+
+#section-3 {
+  float: right;
+  width: 150px;
+}
+
+/* Navigation & Links */
+a {
   text-decoration: none;
-  font-weight: bold;
+  color: #333;
 }
 
-.y2k-link:hover {
-  text-decoration: underline;
+/* Navigation Sections */
+#section-1 div, #section-3 p {
+  margin-bottom: 15px;
+  padding: 23px;
+  background-color: #c9b1ff; /* Example pastel color */
+  color: white;
+  text-align: center;
 }
 
-.y2k-container {
-  background-color: #fdfdff;
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-  padding: 20px;
-  border-radius: 10px;
-  backdrop-filter: blur(4px);
+/* Adjust backgrounds for each link based on provided aesthetic */
+#section-1 div:nth-child(1) { background-color: #c9b1ff; }
+#section-1 div:nth-child(2) { background-color: #ffcaf2; }
+#section-1 div:nth-child(3) { background-color: #ffb2b1; }
+#section-1 div:nth-child(4) { background-color: #fff3ad; }
+#section-1 div:nth-child(5) { background-color: #bcffbc; }
+#section-1 div:nth-child(6) { background-color: #a2edff; }
+#section-1 div:nth-child(7) { background-color: #c9b1ff; }
+#section-1 div:nth-child(8) { background-color: #ffcaf2; }
+
+/* Content Styling */
+#news-text-inner {
+  border: 5px ridge white;
+  background: white;
+  padding: 5px;
+  overflow-y: auto;
 }
 
-/* Custom animations for buttons or links */
-@keyframes y2k-glow {
-  0% {
-    box-shadow: 0 0 5px #ff00cc;
+/* Utilizing provided shadows and borders for emphasis */
+#heading, #news-contain {
+  background: white;
+  box-shadow: 0px 0px 10px 10px white;
+  margin: 20px 0;
+}
+
+/* Image and Iframe Styling */
+img, iframe {
+  border-radius: 20px;
+  border: 1px solid black;
+}
+
+/* Footer or Note */
+footer {
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 960px) {
+  #section-1, #section-2, #section-3 {
+      float: none;
+      width: auto;
+      text-align: center;
   }
-  50% {
-    box-shadow: 0 0 20px #ff00cc;
-  }
-  100% {
-    box-shadow: 0 0 5px #ff00cc;
-  }
-}
 
-.y2k-btn-glow:hover {
-  animation: y2k-glow 1.5s infinite alternate;
+  #container {
+      padding: 5px;
+  }
 }
 
 

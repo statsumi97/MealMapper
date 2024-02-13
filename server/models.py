@@ -6,6 +6,12 @@ import re
 
 from config import db 
 
+#Association table for many-to-many relationship between users and restaurants
+user_favorites = db.Table('user_favorites', 
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('restaurant_id', db.Integer, db.ForeignKey('restaurants.id'), primary_key=True)
+)
+
 class Users(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
@@ -16,10 +22,13 @@ class Users(db.Model, SerializerMixin):
 
     #RELATIONSHIPS
     experiences = db.relationship('Experiences', back_populates='user')
-    user_preferences = db.relationship('UserPreferences', back_populates='user')
+    user_preferences = db.relationship('UserPreferences', back_populates='user', uselist=False) #Ensure it's one-to-one
+    favorite_restaurants = db.relationship('Restaurants', secondary=user_favorites, back_populates='favorited_by_users')
+
+    # user = db.relationship('Users', back_populates='user_preferences')
 
     #SERIALIZATION
-    serialize_rules = ('-experiences.user', '-user_preferences.user')
+    serialize_rules = ('-experiences.user', '-user_preferences.user', '-favorite_restaurants.favorited_by_users', '-experiences.restaurant', )
 
     #VALIDATIONS
     @validates('username')
@@ -59,9 +68,10 @@ class Restaurants(db.Model, SerializerMixin):
 
     #RELATIONSHIPS
     experiences = db.relationship('Experiences', back_populates='restaurant')
+    favorited_by_users = db.relationship('Users', secondary=user_favorites, back_populates='favorite_restaurants')
 
     #SERIALIZATION
-    serialize_rules = ('-experiences.restaurant', )
+    serialize_rules = ('-experiences.restaurant', '-favorited_by_users.favorite_restaurants', )
 
     def __repr__(self):
         return f'<Restaurants {self.id}, {self.name}>'
@@ -82,7 +92,7 @@ class Experiences(db.Model, SerializerMixin):
     restaurant = db.relationship('Restaurants', back_populates ='experiences')
 
     #SERIALIZATION
-    serialize_rules = ('-user.experiences', '-restaurant.experiences')
+    serialize_rules = ('-user.experiences', '-restaurant.experiences', )
 
     def __repr__(self):
         return f'<Experiences {self.id}, {self.user_id}, {self.restaurant_id}, {self.visit_date}, {self.image_url}, {self.story}>'

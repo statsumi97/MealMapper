@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
+import {useParams, useNavigate, Link} from 'react-router-dom';
 
 const EditRestaurantForm = () => {
     const {restaurantId} = useParams();
@@ -46,48 +46,57 @@ const EditRestaurantForm = () => {
     };
 
     return (
-        <div>
-            <h2>Edit Restaurant</h2>
-            <form onSubmit={handleSubmit}>
-                <input
-                    id='name'
-                    name='name'
-                    type='text'
-                    value={restaurant.name}
-                    onChange={handleChange}
-                    placeholder='Restaurant Name'
-                />
-                <input
-                    id='cuisine'
-                    name='cuisine'
-                    type='text'
-                    value={restaurant.cuisine}
-                    onChange={handleChange}
-                    placeholder='Cuisine'
-                />
-                <input
-                    id='neighborhood'
-                    name='neighborhood'
-                    type='text'
-                    value={restaurant.neighborhood}
-                    onChange={handleChange}
-                    placeholder='Neighborhood'
-                />
-                <label>
-                    Visited:
-                <input
-                    id='visited'
-                    name='visited'
-                    type='checkbox'
-                    checked={restaurant.visited}
-                    onChange={handleChange}
-                />
-                </label>
-                <button type='submit'>Update Restaurant</button>
-            </form>
+        <div className="min-h-screen bg-[url('https://64.media.tumblr.com/bcfea4a5e8ad504a317d3945a52a66cd/ef88cccc47cd17c9-77/s75x75_c1/4118951c5afbe9ebec4ba4373180fadbcb463a28.png')] bg-cover flex items-center justify-center p-4">
+            <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-xl space-y-4 w-full max-w-md">
+                <h2 className="text-2xl font-bold text-center text-purple-600">Edit Restaurant</h2>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        value={restaurant.name}
+                        onChange={handleChange}
+                        placeholder="Restaurant Name"
+                        className="input input-bordered w-full"
+                    />
+                    <input
+                        id="cuisine"
+                        name="cuisine"
+                        type="text"
+                        value={restaurant.cuisine}
+                        onChange={handleChange}
+                        placeholder="Cuisine"
+                        className="input input-bordered w-full"
+                    />
+                    <input
+                        id="neighborhood"
+                        name="neighborhood"
+                        type="text"
+                        value={restaurant.neighborhood}
+                        onChange={handleChange}
+                        placeholder="Neighborhood"
+                        className="input input-bordered w-full"
+                    />
+                    <label className="flex items-center space-x-2">
+                        <span>Visited:</span>
+                        <input
+                            id="visited"
+                            name="visited"
+                            type="checkbox"
+                            checked={restaurant.visited}
+                            onChange={handleChange}
+                            className="checkbox"
+                        />
+                    </label>
+                    <button type="submit" className="btn btn-primary w-full">Update Restaurant</button>
+                </form>
+                <Link to="/home" className="inline-block align-baseline font-bold text-sm text-pink-500 hover:text-pink-800">
+                            Back to Home
+                        </Link>
+            </div>
         </div>
-    )
-}
+    );
+};
 
 export default EditRestaurantForm;
 

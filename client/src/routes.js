@@ -6,6 +6,8 @@ import EditRestaurantForm from "./components/EditRestaurantForm";
 import ShareExperienceForm from "./components/ShareExperienceForm";
 import ViewExperiences from "./components/ViewExperiences";
 import EditPostsForm from "./components/EditPostsForm";
+import UserProfile from "./components/UserProfile";
+import UserPreferencesForm from "./components/UserPreferencesForm";
 
 const routes = [
     {
@@ -39,6 +41,14 @@ const routes = [
     {
         path: '/experiences/edit/:experienceId',
         element: <EditPostsForm />
+    },
+    {
+        path: '/users/:userId',
+        element: <UserProfile />
+    },
+    {
+        path: '/users/:userId/preferences',
+        element: <UserPreferencesForm />
     }
 ]
 

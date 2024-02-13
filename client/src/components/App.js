@@ -11,6 +11,8 @@ import ShareExperienceForm from './ShareExperienceForm';
 import ViewExperiences from './ViewExperiences';
 import { UserProvider } from '../context/UserContext';
 import EditPostsForm from './EditPostsForm';
+import UserProfile from './UserProfile';
+import UserPreferencesForm from './UserPreferencesForm';
 
 function App() {
   const navigate = useNavigate(); // Initialize useNavigate hook
@@ -67,10 +69,9 @@ function App() {
   },
 });
 
-  return (
-    <div className='App'>
-      {/* <BrowserRouter> */}
-        <Routes>
+return (
+  <div className="min-h-screen bg-[url('https://64.media.tumblr.com/bcfea4a5e8ad504a317d3945a52a66cd/ef88cccc47cd17c9-77/s75x75_c1/4118951c5afbe9ebec4ba4373180fadbcb463a28.png')] bg-cover flex items-center justify-center">
+    <Routes>
             {/* <Route path='/' element={<App />} /> */}
             <Route path='/signup' element={<SignupForm />} />
             <Route path='/home' element={<RestaurantsList/>} />
@@ -79,45 +80,59 @@ function App() {
             <Route path='/experiences/new' element={<ShareExperienceForm/>} />
             <Route path='/experiences' element={<ViewExperiences/>} />
             <Route path='/experiences/edit/:experienceId' element={<EditPostsForm/>}  />
+            <Route path='/users/:userId' element={<UserProfile/>} />
+            <Route path='/users/:userId/preferences' element={<UserPreferencesForm/>} />
             {/* <Route path='/restaurants/new' element={<AddRestaurantForm/>} /> */}
         </Routes>
-      {/* </BrowserRouter> */}
-      <h1 className='login-title'>Welcome to MealMapper!</h1>
-      {!loggedIn ? (
-       <form onSubmit={formik.handleSubmit}>
-         <input
-          type='text'
-          name='email'
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          placeholder='Email'
-          onBlur={formik.handleBlur}>
-        </input>
-        {formik.touched.email && formik.errors.email && <div style={{color: 'red'}}>{formik.errors.email}</div>}
-         <input
-          type='password'
-          name='password'
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          placeholder='Password'
-          onBlur={formik.handleBlur}>
-
-         </input>
-         {formik.touched.password && formik.errors.password && <div style={{color: 'red'}}>{formik.errors.password}</div>}
-         <button className='btn btn-danger login_button' type='submit'>Log In</button>
-
+    <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-lg w-96">
+      <h1 className="text-2xl font-bold text-center mb-4">Welcome to MealMapper!</h1>
+      <form onSubmit={formik.handleSubmit}>
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            onChange={formik.handleChange}
+            value={formik.values.email}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          />
+          {formik.touched.email && formik.errors.email ? (
+            <div className="text-sm text-red-600">{formik.errors.email}</div>
+          ) : null}
+        </div>
+        <div className="mb-6">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            onChange={formik.handleChange}
+            value={formik.values.password}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+          />
+          {formik.touched.password && formik.errors.password ? (
+            <div className="text-sm text-red-600">{formik.errors.password}</div>
+          ) : null}
+        </div>
+        <button
+          type="submit"
+          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Log In
+        </button>
       </form>
-      ) : (
-        <>
-        <p>You are logged in. <Link to='/home'>Go to Home</Link></p>
-        {/* <Link to='/add-restaurant'> Add New Restaurant</Link> */}
-        </>
-        )}
-       <button className='btn btn-outline-danger'>
-         <Link className='link' to={`/signup`}>Sign Up Here</Link>
-       </button> 
+      <div className="text-center">
+          <Link
+            to="/signup"
+            className="inline-block text-sm font-medium text-indigo-600 hover:text-indigo-500"
+          >
+            Sign Up
+          </Link>
+        </div>
     </div>
-  )
+  </div>
+);
 }
 
 export default App;

@@ -50,6 +50,7 @@ def users_by_email():
         form_data = request.get_json()
         email = form_data['email']
         password = form_data['password']
+        print('Email', email, 'Password', password)
         user = Users.query.filter(Users.user_email == email).first()
 
         #Compare the provided password with the stored hashed password
@@ -325,6 +326,148 @@ def handle_experience(experience_id):
         )
 
     return response
+
+#Fetch user profile by ID
+@app.route('/users/<int:user_id>', methods=['GET'])
+def get_user_profile(user_id):
+    user = Users.query.filter(Users.id == user_id).first()
+    user_data = user.to_dict(rules=('-experiences', '-user_preferences'))
+
+    #Fetch user's experiences
+    experiences = Experiences.query.filter(Experiences.user_id == user_id).all()
+    experiences_data = [experience.to_dict(rules=('-user', '-restaurant')) for experience in experiences]
+
+    #Combine user data and experiences in the response
+    response_data = {
+        'user': user_data,
+        'experiences': experiences_data
+    }
+
+    response = make_response(
+        response_data,
+        200
+    )
+
+    return response
+
+#Route to add and remove restaurants from user favorites
+@app.route('/users/<int:user_id>/favorites/<int:restaurant_id>', methods=['POST', 'DELETE'])
+def manage_user_favorites(user_id, restaurant_id):
+    user = Users.query.get(user_id)
+    restaurant = Restaurants.query.get(restaurant_id)
+
+    if request.method == 'POST':
+        if restaurant not in user.favorite_restaurants:
+            user.favorite_restaurants.append(restaurant)
+            db.session.commit()
+            response = make_response(
+                {'message': 'Restaurant added to favorites'},
+                201
+            )
+        else:
+            response = make_response(
+                {'error': 'Restaurant already in favorites'},
+                400
+            )
+    
+    if request.method == 'DELETE':
+        if restaurant in user.favorite_restaurants:
+            user.favorite_restaurants.remove(restaurant)
+            db.session.commit()
+            response = make_response(
+                {'message': 'Restaurant removed from favorites'},
+                204
+            )
+        else:
+            response = make_response(
+                {'error': 'Restaurant not in favorites'},
+                400
+            )
+    
+    return response
+
+#Route to get a user's favorite restaurants
+@app.route('/users/<int:user_id>/favorites', methods=['GET'])
+def get_user_favorites(user_id):
+    user = Users.query.get(user_id)
+    favorite_restaurants = user.favorite_restaurants
+    favorite_restaurants_data = [restaurant.to_dict(rules=('-experiences',)) for restaurant in favorite_restaurants]
+    response = make_response(
+        favorite_restaurants_data,
+        200
+    )
+
+    return response
+
+#Route to get users who have favorited a specific restaurant
+@app.route('/restaurants/<int:restaurant_id>/favorited_by', methods=['GET'])
+def get_users_for_favorite(restaurant_id):
+    restaurant = Restaurants.query.get(restaurant_id)
+    users = restaurant.favorited_by_users
+    user_data = [user.to_dict(rules=('-experiences', '-favorite_restaurants')) for user in users]
+    response = make_response(
+        user_data,
+        200
+    )
+
+    return response
+
+#Route for setting and updating user preferences
+@app.route('/users/<int:user_id>/preferences', methods=['POST', 'PATCH', 'GET'])
+def user_preferences(user_id):
+    user = Users.query.get(user_id)
+
+    if request.method in ['POST', 'PATCH']:
+        #Attempt to load JSON data for POST and PATCH requests
+        data = request.get_json()
+        #Create new preferences
+        new_preferences = UserPreferences(
+            user_id=user_id,
+            preferred_cuisines=data.get('preferred_cuisines', ''),
+            preferred_neighborhoods=data.get('preferred_neighborhoods', ''),
+            visitation_status=data.get('visitation_status', True)
+        )
+        db.session.add(new_preferences)
+        db.session.commit()
+        response = make_response(
+            new_preferences.to_dict(rules=('-user', )),
+            201
+        )
+
+        #Update existing preferences
+        preferences = UserPreferences.query.filter(UserPreferences.user_id == user_id).first()
+        if not preferences:
+            response = make_response(
+                {'error': 'User preferences not found'},
+                404
+            )
+        
+        preferences.preferred_cuisines = data.get('preferred_cuisines', preferences.preferred_cuisines)
+        preferences.preferred_neighborhoods = data.get('preferred_neighborhoods', preferences.preferred_neighborhoods)
+        preferences.visitation_status = data.get('visitation_status', preferences.visitation_status)
+        db.session.commit()
+
+        response = make_response(
+            preferences.to_dict(rules=('-user', )),
+            200
+        )
+    
+    elif request.method == 'GET':
+        preferences = UserPreferences.query.filter_by(user_id=user_id).first()
+        if preferences:
+            response = make_response(
+                preferences.to_dict(rules=('-user', )),
+                200
+            )
+        else:
+            response = make_response(
+                {'error': 'User preferences not found'},
+                404
+            )
+    
+    return response
+
+
 
 
 if __name__ == '__main__':

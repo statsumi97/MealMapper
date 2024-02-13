@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import FavoriteButton from './FavoriteButton';
 
 const RestaurantsList = () => {
     const [restaurants, setRestaurants] = useState([]);
@@ -82,59 +83,100 @@ const RestaurantsList = () => {
         fetchRestaurants();
     }, [cuisine, neighborhood, visited]); //re-fetch when filters change
 
+    const actualUserId = localStorage.getItem('user_id');
+
+    //Fetch user's favorites and determine whether each restaurant in the list is a favorite
+    const userId = localStorage.getItem('user_id');
+    const [userFavorites, setUserFavorites] = useState([]);
+
+    useEffect(() => {
+        //Fetch the user's favorite restaurants on component mount
+        fetch(`/users/${userId}/favorites`)
+            .then(response => response.json())
+            .then(data => setUserFavorites(data.map(favorite => favorite.id)))
+            .catch(error => console.error('Error fetching user favorites', error));
+    }, []); //Empty dependency array means this effect runs once on mount 
+
     return (
-        <div>
-            <h2>Restaurants</h2>
-            <div>
+        <div className="min-h-screen bg-y2k-bg bg-cover p-10">
+          <div className="text-center mb-10">
+            <h2 className="text-4xl font-bold text-y2k-pink mb-4">Restaurants</h2>
+            <div className="inline-block bg-white bg-opacity-90 p-6 rounded-lg shadow-lg">
+              <div className="flex flex-wrap justify-center gap-4 mb-4">
                 <input
-                    type='text'
-                    placeholder='Cuisine'
-                    value={cuisine}
-                    onChange={(e) => setCuisine(e.target.value)}
+                  type="text"
+                  placeholder="Cuisine"
+                  value={cuisine}
+                  onChange={(e) => setCuisine(e.target.value)}
+                  className="input input-bordered input-y2k-pink w-full max-w-xs"
                 />
                 <input
-                    type='text'
-                    placeholder='Neighborhood'
-                    value={neighborhood}
-                    onChange={(e) => setNeighborhood(e.target.value)}
+                  type="text"
+                  placeholder="Neighborhood"
+                  value={neighborhood}
+                  onChange={(e) => setNeighborhood(e.target.value)}
+                  className="input input-bordered input-y2k-pink w-full max-w-xs"
                 />
                 <select
-                    value={visited}
-                    onChange={(e) => setVisited(e.target.value)}
+                  value={visited}
+                  onChange={(e) => setVisited(e.target.value)}
+                  className="select select-bordered select-y2k-pink w-full max-w-xs"
                 >
-                    <option value=''>Visited Status</option>
-                    <option value='true'>Visited</option>
-                    <option value='false'>Not Visited</option>
+                  <option value="">Visited Status</option>
+                  <option value="true">Visited</option>
+                  <option value="false">Not Visited</option>
                 </select>
-                <button onClick={fetchRestaurants}>Filter</button>
-                <button onClick={fetchRandomRestaurant}>Randomize</button>
+                <button onClick={fetchRestaurants} className="btn btn-y2k-pink">Filter</button>
+                <button onClick={fetchRandomRestaurant} className="btn btn-y2k-pink">Randomize</button>
                 <input
-                    type='text'
-                    placeholder='Search restaurants...'
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                  type="text"
+                  placeholder="Search restaurants..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="input input-bordered input-y2k-pink w-full max-w-xs"
                 />
-                <button onClick={fetchRestaurants}>Search</button>
-            </div>
-            {randomRestaurant && (
-                <div>
-                    <h3>Random Pick</h3>
-                    <p>{randomRestaurant.name} - {randomRestaurant.cuisine} - {randomRestaurant.neighborhood}</p>
+                <button onClick={fetchRestaurants} className="btn btn-y2k-pink">Search</button>
+              </div>
+              {randomRestaurant && (
+                <div className="text-y2k-pink">
+                  <h3>Random Pick</h3>
+                  <p>{randomRestaurant.name} - {randomRestaurant.cuisine} - {randomRestaurant.neighborhood}</p>
                 </div>
-            )}
-            <ul>
-                {restaurants.map(restaurant => (
-                    <li key={restaurant.id}>{restaurant.name} - {restaurant.cuisine} - {restaurant.neighborhood}
-                        <button onClick={() => deleteRestaurant(restaurant.id)}>Delete</button>
-                        <button onClick={() => editRestaurant(restaurant.id)}>Edit</button>
-                    </li>
-                ))}
-            </ul>
-            <Link to='/restaurants/new'>Add New Restaurant</Link>
-            <Link to='/experiences'>See Past Memories</Link>
-            <Link to='/experiences/new'>Share New Memory</Link>
+              )}
+            </div>
+          </div>
+          <ul className="space-y-4">
+            {restaurants.map(restaurant => (
+              <li key={restaurant.id} className="bg-white bg-opacity-80 rounded-lg p-4 shadow-md">
+                <div className="flex justify-between items-center">
+                  <span>
+                    {restaurant.name} - {restaurant.cuisine} - {restaurant.neighborhood}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <FavoriteButton
+                      userId={userId}
+                      restaurantId={restaurant.id}
+                      isFavorited={userFavorites.includes(restaurant.id)}
+                      onToggle={() => {
+                        // Logic to refresh favorites...
+                      }}
+                    />
+                    <button onClick={() => deleteRestaurant(restaurant.id)} className="btn btn-error btn-xs">Delete</button>
+                    <button onClick={() => editRestaurant(restaurant.id)} className="btn btn-info btn-xs">Edit</button>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-10 flex justify-center gap-4">
+            <Link to='/restaurants/new' className="btn btn-y2k-pink">Add New Restaurant</Link>
+            <Link to='/experiences' className="btn btn-y2k-pink">See Past Memories</Link>
+            <Link to='/experiences/new' className="btn btn-y2k-pink">Share New Memory</Link>
+            <Link to={`/users/${actualUserId}`} className="btn btn-y2k-pink">My Profile</Link>
+            <Link to={`/users/${userId}/preferences`} className="btn btn-y2k-pink">View/Edit Preferences</Link>
+          </div>
         </div>
-    );
-};
+      );
+    };
 
 export default RestaurantsList;

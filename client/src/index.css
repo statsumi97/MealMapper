@@ -1,7 +1,77 @@
-:root {
-  --bg: #282c34;
-  --header: #fff;
-  --link: #61dafb;
-  --text: hsla(0, 0%, 100%, 0.88);
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;600&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #fdfdff;
+  overflow-x: hidden;
 }
+
+/* Custom Y2K Styles */
+.y2k-title {
+  font-family: 'Press Start 2P', cursive;
+  color: #ff00cc;
+  text-shadow: 2px 2px #000000;
+}
+
+.y2k-btn {
+  background-image: linear-gradient(90deg, #ff00cc 0%, #3333ff 100%);
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: transform 0.2s ease-in-out;
+}
+
+.y2k-btn:hover {
+  transform: scale(1.1);
+}
+
+.y2k-input {
+  border: 2px solid #ff00cc;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.y2k-link {
+  color: #3333ff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.y2k-link:hover {
+  text-decoration: underline;
+}
+
+.y2k-container {
+  background-color: #fdfdff;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  padding: 20px;
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+}
+
+/* Custom animations for buttons or links */
+@keyframes y2k-glow {
+  0% {
+    box-shadow: 0 0 5px #ff00cc;
+  }
+  50% {
+    box-shadow: 0 0 20px #ff00cc;
+  }
+  100% {
+    box-shadow: 0 0 5px #ff00cc;
+  }
+}
+
+.y2k-btn-glow:hover {
+  animation: y2k-glow 1.5s infinite alternate;
+}
+
+
 

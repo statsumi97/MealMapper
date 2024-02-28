@@ -46,9 +46,9 @@ const EditRestaurantForm = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[url('https://64.media.tumblr.com/bcfea4a5e8ad504a317d3945a52a66cd/ef88cccc47cd17c9-77/s75x75_c1/4118951c5afbe9ebec4ba4373180fadbcb463a28.png')] bg-cover flex items-center justify-center p-4">
+        <div className="min-h-screen bg-y2k-bg bg-cover flex items-center justify-center p-4">
             <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-xl space-y-4 w-full max-w-md">
-                <h2 className="text-2xl font-bold text-center text-purple-600">Edit Restaurant</h2>
+            <h2 className="text-2xl font-bold text-center text-y2k-purple">Edit Restaurant</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <input
                         id="name"
@@ -57,7 +57,7 @@ const EditRestaurantForm = () => {
                         value={restaurant.name}
                         onChange={handleChange}
                         placeholder="Restaurant Name"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full focus:border-y2k-purple focus:ring-2 focus:ring-y2k-purple hover:border-y2k-purple"
                     />
                     <input
                         id="cuisine"
@@ -66,7 +66,7 @@ const EditRestaurantForm = () => {
                         value={restaurant.cuisine}
                         onChange={handleChange}
                         placeholder="Cuisine"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full focus:border-y2k-blue focus:ring-2 focus:ring-y2k-blue hover:border-y2k-blue"
                     />
                     <input
                         id="neighborhood"
@@ -75,22 +75,25 @@ const EditRestaurantForm = () => {
                         value={restaurant.neighborhood}
                         onChange={handleChange}
                         placeholder="Neighborhood"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full focus:border-y2k-green focus:ring-2 focus:ring-y2k-green hover:border-y2k-green"
                     />
                     <label className="flex items-center space-x-2">
-                        <span>Visited:</span>
+                    <span className="text-gray">Visited:</span>
                         <input
                             id="visited"
                             name="visited"
                             type="checkbox"
                             checked={restaurant.visited}
                             onChange={handleChange}
-                            className="checkbox"
+                            className="checkbox checkbox-primary bg-white border-y2k-pink focus:border-y2k-pink hover:bg-y2k-pink"
                         />
                     </label>
-                    <button type="submit" className="btn btn-primary w-full">Update Restaurant</button>
+                    <button 
+                        type="submit" 
+                        className="btn w-full bg-y2k-pink hover:bg-y2k-red focus:ring-2 focus:ring-y2k-blue focus:ring-offset-2 transition duration-150 ease-in-out"
+                            >Update Restaurant</button>
                 </form>
-                <Link to="/home" className="inline-block align-baseline font-bold text-sm text-pink-500 hover:text-pink-800">
+                <Link to="/home" className="inline-block align-baseline font-bold text-sm text-gray hover:text-y2k-green">
                             Back to Home
                         </Link>
             </div>

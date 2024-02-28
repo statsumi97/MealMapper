@@ -13,6 +13,7 @@ import { UserProvider } from '../context/UserContext';
 import EditPostsForm from './EditPostsForm';
 import UserProfile from './UserProfile';
 import UserPreferencesForm from './UserPreferencesForm';
+import PopupModal from './PopupModal';
 
 function App() {
   const navigate = useNavigate(); // Initialize useNavigate hook
@@ -70,7 +71,7 @@ function App() {
 });
 
 return (
-  <div className="min-h-screen bg-[url('https://64.media.tumblr.com/bcfea4a5e8ad504a317d3945a52a66cd/ef88cccc47cd17c9-77/s75x75_c1/4118951c5afbe9ebec4ba4373180fadbcb463a28.png')] bg-cover flex items-center justify-center">
+  <div className="min-h-screen bg-y2k-bg bg-cover flex items-center justify-center">
     <Routes>
             {/* <Route path='/' element={<App />} /> */}
             <Route path='/signup' element={<SignupForm />} />
@@ -84,40 +85,42 @@ return (
             <Route path='/users/:userId/preferences' element={<UserPreferencesForm/>} />
             {/* <Route path='/restaurants/new' element={<AddRestaurantForm/>} /> */}
         </Routes>
-    <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-lg w-96">
-      <h1 className="text-2xl font-bold text-center mb-4">Welcome to MealMapper!</h1>
-      <form onSubmit={formik.handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+        <div className="bg-white bg-opacity-90 p-8 rounded-lg shadow-2xl sm:w-full md:w-1/2 lg:w-1/3 xl:w-1/4 transition-all duration-300 ease-in-out transform hover:scale-105">
+        <h1 className="text-2xl font-bold text-center mb-4 transition duration-300 ease-in-out text-y2k-purple">Welcome to MealMapper!</h1>
+        <form onSubmit={formik.handleSubmit} className="transition duration-300 ease-in-out">
+          {/* Input fields with transitions */}
+          <div className="mb-4 transition duration-300 ease-in-out transform hover:scale-105">
+          <label htmlFor="email" className="block text-sm font-medium text-gray">Email</label>
           <input
             id="email"
             name="email"
             type="email"
             onChange={formik.handleChange}
             value={formik.values.email}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            className={`mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 ${formik.touched.email && formik.errors.email ? 'border-y2k-red bg-y2k-yellow focus:border-y2k-red focus:ring-y2k-red' : 'border-gray-300 focus:border-y2k-purple'}`}
           />
-          {formik.touched.email && formik.errors.email ? (
-            <div className="text-sm text-red-600">{formik.errors.email}</div>
-          ) : null}
+          {formik.touched.email && formik.errors.email && <div className="text-sm text-y2k-red">{formik.errors.email}</div>}
+            {/* <div className="text-sm text-red-600">{formik.errors.email}</div>
+          ) : null} */}
         </div>
-        <div className="mb-6">
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+        <div className="mb-6 transition duration-300 ease-in-out transform hover:scale-105">
+        <label htmlFor="password" className="block text-sm font-medium text-gray">Password</label>
           <input
             id="password"
             name="password"
             type="password"
             onChange={formik.handleChange}
             value={formik.values.password}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            className={`mt-1 block w-full rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 ${formik.touched.password && formik.errors.password ? 'border-y2k-red bg-y2k-yellow focus:border-y2k-red focus:ring-y2k-red' : 'border-gray-300 focus:border-y2k-purple'}`}
           />
-          {formik.touched.password && formik.errors.password ? (
-            <div className="text-sm text-red-600">{formik.errors.password}</div>
-          ) : null}
+          {formik.touched.password && formik.errors.password && <div className="text-sm text-y2k-red">{formik.errors.password}</div>}
+            {/* <div className="text-sm text-red-600">{formik.errors.password}</div>
+          ) : null} */}
         </div>
+        {/* Submit button with transitions */}
         <button
           type="submit"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray bg-y2k-pink hover:bg-y2k-red focus:outline-none focus:ring-2 focus:ring-y2k-blue focus:ring-offset-2 transition duration-300 ease-in-out"
         >
           Log In
         </button>
@@ -125,7 +128,7 @@ return (
       <div className="text-center">
           <Link
             to="/signup"
-            className="inline-block text-sm font-medium text-indigo-600 hover:text-indigo-500"
+            className="inline-block text-sm font-medium text-gray hover:text-y2k-green transition duration-300 ease-in-out"
           >
             Sign Up
           </Link>

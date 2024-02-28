@@ -57,7 +57,16 @@ const cuisineColors = {
     Dominican: '#ffbcde',
     Henan: '#debcff',
     "Xi'an": '#ffbcbc',
-    Poke: '#bcbcff'
+    Poke: '#bcbcff',
+    Serbian: '#ffffbc',
+    Moroccan: '#ffdebc',
+    Egyptian: '#bcddff',
+    Afghan: '#bcffff',
+    Senegalese: '#bcdeff',
+    Cambodian: '#ffddbc',
+    Argentinian: '#ffbcbd',
+    Indonesian: '#bcfffe',
+    Venezuelan: '#bcffdd'
 }
 
 export default cuisineColors

@@ -82,10 +82,10 @@ const EditPostsForm = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[url('https://64.media.tumblr.com/bcfea4a5e8ad504a317d3945a52a66cd/ef88cccc47cd17c9-77/s75x75_c1/4118951c5afbe9ebec4ba4373180fadbcb463a28.png')] bg-cover flex justify-center items-center p-4">
-            <div className="w-full max-w-lg bg-white bg-opacity-90 p-8 rounded-lg shadow-xl">
-                <h2 className="text-3xl font-bold mb-6 text-center text-purple-600">Edit Post</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="min-h-screen bg-y2k-bg bg-cover flex justify-center items-center p-4">
+            <div className="w-full max-w-xl bg-white bg-opacity-95 p-8 rounded-lg shadow-2xl space-y-6 transition ease-in-out duration-150">
+            <h2 className="text-3xl font-bold mb-6 text-center font-heading text-y2k-purple">Edit Post</h2>
+                <form onSubmit={handleSubmit} className="space-y-6">
                     <input
                         id="restaurant_id"
                         name="restaurant_id"
@@ -93,7 +93,7 @@ const EditPostsForm = () => {
                         value={experience.restaurant_id}
                         onChange={handleChange}
                         placeholder="Restaurant ID"
-                        className="input input-bordered w-full"
+                        className="input input-bordered w-full focus:border-y2k-purple focus:ring focus:ring-y2k-purple focus:ring-opacity-50"
                     />
                     <input
                         id="visit_date"
@@ -101,7 +101,7 @@ const EditPostsForm = () => {
                         type="date"
                         value={experience.visit_date}
                         onChange={handleChange}
-                        className="input input-bordered w-full"
+                        className="textarea textarea-bordered w-full focus:border-y2k-purple focus:ring focus:ring-y2k-purple focus:ring-opacity-50 font-body"
                     />
                     <input
                         id="image_url"
@@ -110,13 +110,13 @@ const EditPostsForm = () => {
                         value={experience.image_url}
                         onChange={handleChange}
                         placeholder="Image URL"
-                        className="input input-bordered w-full"
+                        className="textarea textarea-bordered w-full focus:border-y2k-purple focus:ring focus:ring-y2k-purple focus:ring-opacity-50 font-body"
                     />
                     <input
                         type="file"
                         onChange={handleImageUpload}
                         accept="image/*"
-                        className="file:btn file:btn-primary"
+                        className="textarea textarea-bordered w-full focus:border-y2k-purple focus:ring focus:ring-y2k-purple focus:ring-opacity-50 font-body"
                     />
                     <textarea
                         id="story"
@@ -124,13 +124,11 @@ const EditPostsForm = () => {
                         value={experience.story}
                         onChange={handleChange}
                         placeholder="Story"
-                        className="textarea textarea-bordered w-full"
+                        className="textarea textarea-bordered w-full focus:border-y2k-purple focus:ring focus:ring-y2k-purple focus:ring-opacity-50 font-body"
                     ></textarea>
-                    <button type="submit" className="btn btn-primary w-full">Update Post</button>
+                    <button type="submit" className="btn bg-y2k-pink hover:bg-y2k-red focus:ring-y2k-blue focus:ring-opacity-50 w-full transition ease-in-out duration-150">Update Post</button>
                 </form>
-                <Link to="/home" className="inline-block align-baseline font-bold text-sm text-pink-500 hover:text-pink-800">
-                            Back to Home
-                        </Link>
+                <Link to="/home" className="text-gray hover:text-y2k-green transition ease-in-out duration-150">Back to Home</Link>
             </div>
         </div>
     );

@@ -3,6 +3,42 @@ import {useFormik} from 'formik';
 import * as yup from 'yup';
 import { useNavigate, Link } from 'react-router-dom';
 
+//CSS FUNCTIONS:
+
+//SVG icons for checked and unchecked states
+const CheckedIcon = () => (
+    <svg className='fill-current text-pink-500' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' width='20' height='20'>
+        <path d='M10 15l-5.5-5.5 1.4-1.4L10 12.2l4.1-4.1 1.4 1.4z' />
+    </svg>
+);
+
+const UncheckedIcon = () => (
+    <svg className='fill-current text-gray-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' width='20' height='20'>
+        <path d='M10 15l-5.5-5.5 1.4-1.4L10 12.2l4.1-4.1 1.4 1.4z' />
+    </svg>
+);
+
+// Error Icon Component
+const ErrorIcon = () => (
+    <svg className="w-4 h-4 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 00-2 0v3a1 1 0 002 0V6zm-1 7a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" clipRule="evenodd" />
+    </svg>
+);
+
+// Tooltip Component for displaying error messages
+const Tooltip = ({ message }) => (
+    <div className="absolute -top-8 left-0 bg-red-500 text-white text-xs rounded py-1 px-2 z-10">
+      {message}
+    </div>
+);
+
+// Define placeholders with examples
+const fieldPlaceholders = {
+    name: 'Enter a Restaurant Name',
+    cuisine: 'Type Cuisine Here',
+    neighborhood: 'Specify Neighborhood',
+};
+
 const AddRestaurantForm = () => {
     const navigate = useNavigate();
 
@@ -37,67 +73,54 @@ const AddRestaurantForm = () => {
     });
 
     return (
-        <div className="min-h-screen bg-[url('https://64.media.tumblr.com/bcfea4a5e8ad504a317d3945a52a66cd/ef88cccc47cd17c9-77/s75x75_c1/4118951c5afbe9ebec4ba4373180fadbcb463a28.png')] bg-cover flex justify-center items-center p-4">
-            <div className="w-full max-w-xl bg-white bg-opacity-90 p-8 rounded-lg shadow-xl">
-                <h2 className="text-3xl font-bold mb-6 text-center text-pink-600">Add a New Restaurant</h2>
-                <form onSubmit={formik.handleSubmit} className="space-y-4">
-                    <div>
-                        <input
-                            id="name"
-                            name="name"
-                            type="text"
-                            onChange={formik.handleChange}
-                            value={formik.values.name}
-                            placeholder="Restaurant Name"
-                            className="input input-bordered w-full"
-                        />
-                        {formik.touched.name && formik.errors.name && <p className="text-red-500">{formik.errors.name}</p>}
-                    </div>
-                    <div>
-                        <input
-                            id="cuisine"
-                            name="cuisine"
-                            type="text"
-                            onChange={formik.handleChange}
-                            value={formik.values.cuisine}
-                            placeholder="Cuisine"
-                            className="input input-bordered w-full"
-                        />
-                        {formik.touched.cuisine && formik.errors.cuisine && <p className="text-red-500">{formik.errors.cuisine}</p>}
-                    </div>
-                    <div>
-                        <input
-                            id="neighborhood"
-                            name="neighborhood"
-                            type="text"
-                            onChange={formik.handleChange}
-                            value={formik.values.neighborhood}
-                            placeholder="Neighborhood"
-                            className="input input-bordered w-full"
-                        />
-                        {formik.touched.neighborhood && formik.errors.neighborhood && <p className="text-red-500">{formik.errors.neighborhood}</p>}
-                    </div>
-                    <div className="flex items-center gap-2">
+        <div className="min-h-screen bg-y2k-bg bg-cover flex justify-center items-center p-4">
+          <div className="w-full max-w-xl bg-white bg-opacity-90 p-8 rounded-lg shadow-2xl shadow-pink-500/50">
+          <h2 className="text-2xl font-bold mb-6 text-center font-heading text-y2k-purple">Add a New Restaurant</h2>
+            <form onSubmit={formik.handleSubmit} className="space-y-4 relative">
+              {['name', 'cuisine', 'neighborhood'].map((field) => (
+                <div key={field} className="relative group">
+                  <input
+                    id={field}
+                    name={field}
+                    type="text"
+                    onChange={formik.handleChange}
+                    value={formik.values[field]}
+                    placeholder={fieldPlaceholders[field]} // Use dynamic placeholders
+                    // placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                    className="input input-bordered w-full focus:shadow-lg focus:shadow-y2k-pink"
+                  />
+                  {formik.touched[field] && formik.errors[field] && (
+                    <>
+                      <ErrorIcon />
+                      <Tooltip message={formik.errors[field]} />
+                    </>
+                  )}
+                </div>
+              ))}
+              <div className="flex items-center gap-2">
                         <label htmlFor="visited" className="text-gray-700">
+                            <div className="relative">
+                                <input
+                                    id="visited"
+                                    name="visited"
+                                    type="checkbox"
+                                    onChange={formik.handleChange}
+                                    checked={formik.values.visited}
+                                    className="sr-only"
+                                />
+                                <div className="w-6 h-6 bg-white border-2 border-gray-300 rounded flex justify-center items-center hover:bg-y2k-pink transition-colors duration-300">
+                                    {formik.values.visited ? <CheckedIcon /> : <UncheckedIcon />}
+                                </div>
+                            </div>
                             Visited?
                         </label>
-                        <input
-                            id="visited"
-                            name="visited"
-                            type="checkbox"
-                            onChange={formik.handleChange}
-                            checked={formik.values.visited} 
-                            className="checkbox checkbox-primary"
-                        />
                     </div>
-                    <button type="submit" className="btn btn-primary w-full">Submit</button>
+                    <button type="submit" className="btn bg-y2k-pink hover:bg-y2k-red focus:ring-y2k-blue focus:ring-opacity-50 w-full transition ease-in-out duration-150">Submit</button>
                 </form>
-                <Link to="/home" className="inline-block align-baseline font-bold text-sm text-pink-500 hover:text-pink-800">
-                            Back to Home
-                        </Link>
+                <Link to="/home" className="inline-block align-baseline font-bold text-sm text-gray hover:text-y2k-green transition ease-in-out duration-150">Back to Home</Link>
             </div>
         </div>
     );
-}
+};
 
 export default AddRestaurantForm;

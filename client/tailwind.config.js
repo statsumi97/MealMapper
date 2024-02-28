@@ -14,13 +14,16 @@ module.exports = {
         'y2k-red': '#ffb2b1',
       },
       fontFamily: {
-        'y2k': ['"MS Gothic"', 'sans-serif'],
+        heading: ['Poppins', 'sans-serif'],
+        body: ['Roboto', 'sans-serif'],
       },
       backgroundImage: {
         'y2k-bg': "url('https://64.media.tumblr.com/bcfea4a5e8ad504a317d3945a52a66cd/ef88cccc47cd17c9-77/s75x75_c1/4118951c5afbe9ebec4ba4373180fadbcb463a28.png')",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 }
 

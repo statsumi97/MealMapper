@@ -66,7 +66,19 @@ const cuisineColors = {
     Cambodian: '#ffddbc',
     Argentinian: '#ffbcbd',
     Indonesian: '#bcfffe',
-    Venezuelan: '#bcffdd'
+    Venezuelan: '#bcffdd',
+    Iranian: '#bdffbc',
+    "Chinese (Halal)": '#febcff',
+    Halal: '#ddbcff',
+    Yemeni: '#bcbdff',
+    Uzbeki: '#fffebc',
+    Albanian: '#dfffbc',
+    Creole: '#dcbcff',
+    Laotian: '#bcbeff',
+    Ethiopian: '#fffdbc',
+    Pakistani: '#ffdcbc',
+    Ecuadorian: '#bcdfff',
+    Brazilian: '#ffbcbe'
 }
 
 export default cuisineColors
